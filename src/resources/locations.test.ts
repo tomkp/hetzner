@@ -1,13 +1,16 @@
-import { describe, it, beforeEach, mock } from "node:test";
+import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert";
-import { HetznerClient } from "../client.ts";
+import {
+  setupMockClient,
+  mockResponse,
+  mockPaginatedResponse,
+  type TestContext,
+} from "../test-utils.ts";
 import { LocationsApi, type Location } from "./locations.ts";
 
 describe("LocationsApi", () => {
-  const mockToken = "test-api-token";
-  let client: HetznerClient;
+  let ctx: TestContext;
   let locations: LocationsApi;
-  let fetchMock: ReturnType<typeof mock.fn>;
 
   const mockLocation: Location = {
     id: 1,
@@ -21,21 +24,14 @@ describe("LocationsApi", () => {
   };
 
   beforeEach(() => {
-    client = new HetznerClient(mockToken);
-    locations = new LocationsApi(client);
-    fetchMock = mock.fn();
-    mock.method(globalThis, "fetch", fetchMock);
+    ctx = setupMockClient();
+    locations = new LocationsApi(ctx.client);
   });
 
   describe("get", () => {
     it("retrieves a location by id", async () => {
-      fetchMock.mock.mockImplementation(() =>
-        Promise.resolve(
-          new Response(JSON.stringify({ location: mockLocation }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          })
-        )
+      ctx.fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(mockResponse({ location: mockLocation }))
       );
 
       const location = await locations.get(1);
@@ -48,27 +44,8 @@ describe("LocationsApi", () => {
 
   describe("list", () => {
     it("lists all locations", async () => {
-      const response = {
-        locations: [mockLocation],
-        meta: {
-          pagination: {
-            page: 1,
-            per_page: 25,
-            previous_page: null,
-            next_page: null,
-            last_page: 1,
-            total_entries: 1,
-          },
-        },
-      };
-
-      fetchMock.mock.mockImplementation(() =>
-        Promise.resolve(
-          new Response(JSON.stringify(response), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          })
-        )
+      ctx.fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(mockResponse(mockPaginatedResponse("locations", [mockLocation])))
       );
 
       const result = await locations.list();
@@ -79,27 +56,8 @@ describe("LocationsApi", () => {
 
   describe("getByName", () => {
     it("finds location by name", async () => {
-      const response = {
-        locations: [mockLocation],
-        meta: {
-          pagination: {
-            page: 1,
-            per_page: 25,
-            previous_page: null,
-            next_page: null,
-            last_page: 1,
-            total_entries: 1,
-          },
-        },
-      };
-
-      fetchMock.mock.mockImplementation(() =>
-        Promise.resolve(
-          new Response(JSON.stringify(response), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          })
-        )
+      ctx.fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(mockResponse(mockPaginatedResponse("locations", [mockLocation])))
       );
 
       const location = await locations.getByName("fsn1");

@@ -50,11 +50,7 @@ export interface FloatingIPActionResponse {
 }
 
 export class FloatingIPsApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<FloatingIP> {
     const response = await this.client.get<{ floating_ip: FloatingIP }>(

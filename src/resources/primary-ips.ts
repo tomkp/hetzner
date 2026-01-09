@@ -59,11 +59,7 @@ export interface PrimaryIPActionResponse {
 }
 
 export class PrimaryIPsApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<PrimaryIP> {
     const response = await this.client.get<{ primary_ip: PrimaryIP }>(`/primary_ips/${String(id)}`);

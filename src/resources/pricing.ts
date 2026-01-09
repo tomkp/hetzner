@@ -82,11 +82,7 @@ export interface Pricing {
 }
 
 export class PricingApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(): Promise<Pricing> {
     const response = await this.client.get<{ pricing: Pricing }>("/pricing");

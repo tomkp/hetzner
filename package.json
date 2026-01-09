@@ -1,5 +1,5 @@
 {
-  "name": "hetzner",
+  "name": "@tomkp/hetzner",
   "version": "0.1.0",
   "description": "TypeScript client for the Hetzner Cloud API",
   "type": "module",

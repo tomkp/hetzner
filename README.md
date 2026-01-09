@@ -11,27 +11,40 @@ npm install hetzner
 ## Quick Start
 
 ```typescript
-import { HetznerClient, ServersApi } from "hetzner";
+import { Hetzner } from "hetzner";
 
-const client = new HetznerClient("your-api-token");
-const servers = new ServersApi(client);
+const hetzner = new Hetzner("your-api-token");
 
 // List all servers
-const { servers: serverList } = await servers.list();
-console.log(serverList);
+const { servers } = await hetzner.servers.list();
+console.log(servers);
 
 // Get a server by name
-const server = await servers.getByName("my-server");
+const server = await hetzner.servers.getByName("my-server");
 ```
 
 ## Configuration
 
 ```typescript
-import { HetznerClient } from "hetzner";
+import { Hetzner } from "hetzner";
 
-const client = new HetznerClient("your-api-token", {
+const hetzner = new Hetzner("your-api-token", {
   baseUrl: "https://api.hetzner.cloud/v1", // optional, this is the default
 });
+
+// Access the underlying client if needed
+console.log(hetzner.client.baseUrl);
+```
+
+### Using Individual API Classes
+
+You can also use the individual API classes directly if preferred:
+
+```typescript
+import { HetznerClient, ServersApi } from "hetzner";
+
+const client = new HetznerClient("your-api-token");
+const servers = new ServersApi(client);
 ```
 
 ## Usage Examples

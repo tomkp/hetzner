@@ -1,5 +1,8 @@
 # IDE
 .idea/
+*.swp
+*.swo
+.vscode/
 
 # OS
 .DS_Store
@@ -7,6 +10,15 @@ Thumbs.db
 
 # Dependencies
 node_modules/
+package-lock.json
 
 # Build outputs
 dist/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Environment
+.env
+.env.local

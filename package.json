@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsc",
     "test": "node --test --experimental-transform-types --experimental-strip-types 'src/**/*.test.ts'",
+    "test:coverage": "node --test --experimental-transform-types --experimental-strip-types --experimental-test-coverage 'src/**/*.test.ts'",
     "lint": "eslint src/",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",

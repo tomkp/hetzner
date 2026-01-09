@@ -190,3 +190,14 @@ export type {
   LoadBalancerMetricsParams,
   LoadBalancerMetricsResponse,
 } from "./resources/load-balancers.ts";
+
+export { PlacementGroupsApi } from "./resources/placement-groups.ts";
+export type {
+  PlacementGroup,
+  PlacementGroupType,
+  PlacementGroupsListParams,
+  PlacementGroupsListResponse,
+  PlacementGroupCreateParams,
+  PlacementGroupCreateResponse,
+  PlacementGroupUpdateParams,
+} from "./resources/placement-groups.ts";

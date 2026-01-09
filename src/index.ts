@@ -164,3 +164,29 @@ export type {
   LoadBalancerTypesListParams,
   LoadBalancerTypesListResponse,
 } from "./resources/load-balancer-types.ts";
+
+export { LoadBalancersApi } from "./resources/load-balancers.ts";
+export type {
+  LoadBalancer,
+  LoadBalancerAlgorithm,
+  LoadBalancerAlgorithmType,
+  LoadBalancerService,
+  LoadBalancerServiceProtocol,
+  LoadBalancerTarget,
+  LoadBalancerTargetType,
+  LoadBalancerPublicNet,
+  LoadBalancerPrivateNet,
+  LoadBalancerProtection,
+  LoadBalancerHealthCheck,
+  LoadBalancersListParams,
+  LoadBalancersListResponse,
+  LoadBalancerCreateParams,
+  LoadBalancerCreateResponse,
+  LoadBalancerUpdateParams,
+  LoadBalancerActionResponse,
+  LoadBalancerServiceParams,
+  LoadBalancerTargetParams,
+  LoadBalancerAttachToNetworkParams,
+  LoadBalancerMetricsParams,
+  LoadBalancerMetricsResponse,
+} from "./resources/load-balancers.ts";

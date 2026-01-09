@@ -60,3 +60,17 @@ export type {
   SshKeyCreateParams,
   SshKeyUpdateParams,
 } from "./resources/ssh-keys.ts";
+
+export { ServersApi } from "./resources/servers.ts";
+export type {
+  Server,
+  ServerStatus,
+  ServerPublicNet,
+  ServerPrivateNet,
+  ServersListParams,
+  ServersListResponse,
+  ServerCreateParams,
+  ServerCreateResponse,
+  ServerUpdateParams,
+  ServerActionResponse,
+} from "./resources/servers.ts";

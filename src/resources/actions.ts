@@ -1,5 +1,6 @@
 import { HetznerClient, type QueryParams } from "../client.ts";
 import { type PaginatedResponse } from "../pagination.ts";
+import { delay } from "../utils.ts";
 
 export type ActionStatus = "running" | "success" | "error";
 
@@ -47,8 +48,6 @@ export class ActionError extends Error {
     this.action = action;
   }
 }
-
-const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class ActionsApi {
   constructor(private readonly client: HetznerClient) {}

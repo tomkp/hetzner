@@ -1,6 +1,6 @@
 # hetzner
 
-A TypeScript client for the [Hetzner Cloud API](https://docs.hetzner.cloud/).
+A TypeScript client for the [Hetzner Cloud API](https://docs.hetzner.cloud/) and [Hetzner DNS API](https://dns.hetzner.com/api-docs).
 
 ## Installation
 
@@ -254,7 +254,110 @@ try {
 }
 ```
 
+## DNS API
+
+The library also provides a client for the Hetzner DNS API. Note that the DNS API uses a separate API token from the Cloud API.
+
+### DNS Quick Start
+
+```typescript
+import { HetznerDns } from "hetzner";
+
+const dns = new HetznerDns("your-dns-api-token");
+
+// List all zones
+const { zones } = await dns.zones.list();
+console.log(zones);
+
+// Get a zone by name
+const zone = await dns.zones.getByName("example.com");
+```
+
+### DNS Zones
+
+```typescript
+import { HetznerDns } from "hetzner";
+
+const dns = new HetznerDns("your-dns-api-token");
+
+// Create a zone
+const zone = await dns.zones.create({
+  name: "example.com",
+  ttl: 3600,
+});
+
+// Update a zone
+const updated = await dns.zones.update(zone.id, {
+  ttl: 7200,
+});
+
+// Delete a zone
+await dns.zones.delete(zone.id);
+```
+
+### DNS Records
+
+```typescript
+import { HetznerDns } from "hetzner";
+
+const dns = new HetznerDns("your-dns-api-token");
+
+// List records for a zone
+const { records } = await dns.records.list({ zone_id: "zone-id" });
+
+// Create an A record
+const record = await dns.records.create({
+  zone_id: "zone-id",
+  type: "A",
+  name: "www",
+  value: "192.168.1.1",
+  ttl: 3600,
+});
+
+// Create multiple records at once
+const result = await dns.records.bulkCreate({
+  records: [
+    { zone_id: "zone-id", type: "A", name: "@", value: "192.168.1.1", ttl: 3600 },
+    { zone_id: "zone-id", type: "A", name: "www", value: "192.168.1.1", ttl: 3600 },
+    { zone_id: "zone-id", type: "MX", name: "@", value: "10 mail.example.com", ttl: 3600 },
+  ],
+});
+
+// Update a record
+await dns.records.update(record.id, {
+  zone_id: "zone-id",
+  type: "A",
+  name: "www",
+  value: "192.168.1.2",
+  ttl: 3600,
+});
+
+// Delete a record
+await dns.records.delete(record.id);
+```
+
+### DNS Error Handling
+
+```typescript
+import { HetznerDns, HetznerDnsError, DnsRateLimitError } from "hetzner";
+
+const dns = new HetznerDns("your-dns-api-token");
+
+try {
+  await dns.zones.get("invalid-zone-id");
+} catch (error) {
+  if (error instanceof DnsRateLimitError) {
+    console.log(`Rate limited. Retry after ${error.retryAfter} seconds`);
+  } else if (error instanceof HetznerDnsError) {
+    console.log(`DNS API error: ${error.message}`);
+    console.log(`Status code: ${error.statusCode}`);
+  }
+}
+```
+
 ## Available Resources
+
+### Cloud API
 
 | Resource | Class | Description |
 |----------|-------|-------------|
@@ -276,6 +379,13 @@ try {
 | Servers | `ServersApi` | Cloud servers |
 | SSH Keys | `SshKeysApi` | SSH keys |
 | Volumes | `VolumesApi` | Block storage volumes |
+
+### DNS API
+
+| Resource | Class | Description |
+|----------|-------|-------------|
+| Zones | `ZonesApi` | DNS zones |
+| Records | `RecordsApi` | DNS records |
 
 ## Requirements
 

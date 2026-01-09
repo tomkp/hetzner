@@ -219,3 +219,32 @@ export type {
   VolumePricing,
   VolumeLocationPricing,
 } from "./resources/pricing.ts";
+
+// DNS API exports
+export { HetznerDns } from "./dns/hetzner-dns.ts";
+
+export { HetznerDnsClient, HetznerDnsError, DnsRateLimitError } from "./dns/client.ts";
+export type { HetznerDnsClientOptions, DnsQueryParams } from "./dns/client.ts";
+
+export { ZonesApi } from "./dns/zones.ts";
+export type {
+  Zone,
+  ZoneStatus,
+  ZonesListParams,
+  ZonesListResponse,
+  ZoneCreateParams,
+  ZoneUpdateParams,
+  DnsPagination,
+} from "./dns/zones.ts";
+
+export { RecordsApi } from "./dns/records.ts";
+export type {
+  Record,
+  RecordType,
+  RecordsListParams,
+  RecordsListResponse,
+  RecordCreateParams,
+  RecordUpdateParams,
+  RecordsBulkCreateParams,
+  RecordsBulkCreateResponse,
+} from "./dns/records.ts";

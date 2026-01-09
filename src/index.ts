@@ -156,3 +156,11 @@ export type {
   CertificateUpdateParams,
   CertificateActionResponse,
 } from "./resources/certificates.ts";
+
+export { LoadBalancerTypesApi } from "./resources/load-balancer-types.ts";
+export type {
+  LoadBalancerType,
+  LoadBalancerTypePrice,
+  LoadBalancerTypesListParams,
+  LoadBalancerTypesListResponse,
+} from "./resources/load-balancer-types.ts";

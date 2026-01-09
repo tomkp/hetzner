@@ -74,3 +74,15 @@ export type {
   ServerUpdateParams,
   ServerActionResponse,
 } from "./resources/servers.ts";
+
+export { VolumesApi } from "./resources/volumes.ts";
+export type {
+  Volume,
+  VolumeStatus,
+  VolumesListParams,
+  VolumesListResponse,
+  VolumeCreateParams,
+  VolumeCreateResponse,
+  VolumeUpdateParams,
+  VolumeActionResponse,
+} from "./resources/volumes.ts";

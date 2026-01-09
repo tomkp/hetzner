@@ -86,3 +86,17 @@ export type {
   VolumeUpdateParams,
   VolumeActionResponse,
 } from "./resources/volumes.ts";
+
+export { NetworksApi } from "./resources/networks.ts";
+export type {
+  Network,
+  Subnet,
+  SubnetType,
+  Route,
+  NetworksListParams,
+  NetworksListResponse,
+  NetworkCreateParams,
+  NetworkUpdateParams,
+  NetworkActionResponse,
+  SubnetParams,
+} from "./resources/networks.ts";

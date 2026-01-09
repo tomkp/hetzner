@@ -72,11 +72,7 @@ export interface SubnetParams {
 }
 
 export class NetworksApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<Network> {
     const response = await this.client.get<{ network: Network }>(`/networks/${String(id)}`);

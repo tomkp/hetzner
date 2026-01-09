@@ -202,11 +202,7 @@ export interface LoadBalancerMetricsResponse {
 }
 
 export class LoadBalancersApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<LoadBalancer> {
     const response = await this.client.get<{ load_balancer: LoadBalancer }>(

@@ -56,11 +56,7 @@ export interface VolumeActionResponse {
 }
 
 export class VolumesApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<Volume> {
     const response = await this.client.get<{ volume: Volume }>(`/volumes/${String(id)}`);

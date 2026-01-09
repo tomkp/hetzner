@@ -71,11 +71,7 @@ export interface CertificateActionResponse {
 }
 
 export class CertificatesApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<Certificate> {
     const response = await this.client.get<{ certificate: Certificate }>(

@@ -28,11 +28,7 @@ export interface LoadBalancerTypesListResponse extends PaginatedResponse {
 }
 
 export class LoadBalancerTypesApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<LoadBalancerType> {
     const response = await this.client.get<{ load_balancer_type: LoadBalancerType }>(

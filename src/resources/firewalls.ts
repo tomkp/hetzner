@@ -65,11 +65,7 @@ export interface FirewallActionsResponse {
 }
 
 export class FirewallsApi {
-  private readonly client: HetznerClient;
-
-  constructor(client: HetznerClient) {
-    this.client = client;
-  }
+  constructor(private readonly client: HetznerClient) {}
 
   async get(id: number): Promise<Firewall> {
     const response = await this.client.get<{ firewall: Firewall }>(`/firewalls/${String(id)}`);

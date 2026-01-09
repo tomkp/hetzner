@@ -1,4 +1,8 @@
+/**
+ * Configuration options for the Hetzner client.
+ */
 export interface HetznerClientOptions {
+  /** Base URL for the Hetzner Cloud API. Defaults to https://api.hetzner.cloud/v1 */
   baseUrl?: string;
 }
 
@@ -9,8 +13,13 @@ export interface ErrorResponse {
   };
 }
 
+/**
+ * Error thrown when the Hetzner API returns an error response.
+ */
 export class HetznerError extends Error {
+  /** The error code returned by the API (e.g., "not_found", "uniqueness_error") */
   readonly code: string;
+  /** The HTTP status code of the response */
   readonly statusCode: number;
 
   constructor(message: string, code: string, statusCode: number) {
@@ -21,7 +30,12 @@ export class HetznerError extends Error {
   }
 }
 
+/**
+ * Error thrown when the API rate limit is exceeded.
+ * Contains information about when the request can be retried.
+ */
 export class RateLimitError extends HetznerError {
+  /** Number of seconds to wait before retrying the request */
   readonly retryAfter: number;
 
   constructor(message: string, code: string, retryAfter: number) {
@@ -32,29 +46,76 @@ export class RateLimitError extends HetznerError {
 }
 
 type QueryValue = string | number | boolean | string[] | number[];
+/** Query parameters for API requests */
 export type QueryParams = Record<string, QueryValue | undefined>;
 
+/**
+ * HTTP client for communicating with the Hetzner Cloud API.
+ *
+ * @example
+ * ```typescript
+ * const client = new HetznerClient("your-api-token");
+ * const servers = await client.get("/servers");
+ * ```
+ */
 export class HetznerClient {
+  /** The base URL for API requests */
   public readonly baseUrl: string;
   private readonly token: string;
 
+  /**
+   * Creates a new Hetzner client.
+   * @param token - Your Hetzner Cloud API token
+   * @param options - Optional configuration options
+   */
   constructor(token: string, options: HetznerClientOptions = {}) {
     this.token = token;
     this.baseUrl = options.baseUrl ?? "https://api.hetzner.cloud/v1";
   }
 
+  /**
+   * Performs a GET request to the API.
+   * @param path - The API endpoint path (e.g., "/servers")
+   * @param params - Optional query parameters
+   * @returns The parsed JSON response
+   * @throws {HetznerError} When the API returns an error
+   * @throws {RateLimitError} When the rate limit is exceeded
+   */
   async get<T>(path: string, params?: QueryParams): Promise<T> {
     return this.request<T>("GET", path, undefined, params);
   }
 
+  /**
+   * Performs a POST request to the API.
+   * @param path - The API endpoint path
+   * @param body - Optional request body (will be JSON-encoded)
+   * @returns The parsed JSON response
+   * @throws {HetznerError} When the API returns an error
+   * @throws {RateLimitError} When the rate limit is exceeded
+   */
   async post<T>(path: string, body?: unknown): Promise<T> {
     return this.request<T>("POST", path, body);
   }
 
+  /**
+   * Performs a PUT request to the API.
+   * @param path - The API endpoint path
+   * @param body - Optional request body (will be JSON-encoded)
+   * @returns The parsed JSON response
+   * @throws {HetznerError} When the API returns an error
+   * @throws {RateLimitError} When the rate limit is exceeded
+   */
   async put<T>(path: string, body?: unknown): Promise<T> {
     return this.request<T>("PUT", path, body);
   }
 
+  /**
+   * Performs a DELETE request to the API.
+   * @param path - The API endpoint path
+   * @returns The parsed JSON response, or undefined for 204 responses
+   * @throws {HetznerError} When the API returns an error
+   * @throws {RateLimitError} When the rate limit is exceeded
+   */
   async delete<T>(path: string): Promise<T | undefined> {
     return this.request<T>("DELETE", path);
   }

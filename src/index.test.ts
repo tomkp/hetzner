@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { createRequire } from "node:module";
 import {
   VERSION,
   HetznerDns,
@@ -10,9 +11,14 @@ import {
   RecordsApi,
 } from "./index.ts";
 
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json") as { version: string };
+
 describe("hetzner client", () => {
-  it("exports VERSION", () => {
-    assert.strictEqual(VERSION, "0.1.0");
+  it("exports VERSION matching package.json", () => {
+    assert.strictEqual(VERSION, pkg.version);
+    assert.ok(typeof VERSION === "string");
+    assert.ok(VERSION.length > 0);
   });
 });
 

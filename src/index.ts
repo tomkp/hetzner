@@ -38,3 +38,25 @@ export type {
   DatacentersListParams,
   DatacentersListResponse,
 } from "./resources/datacenters.ts";
+
+export { ImagesApi } from "./resources/images.ts";
+export type {
+  Image,
+  ImageType,
+  ImageStatus,
+  ImagesListParams,
+  ImagesListResponse,
+  ImageUpdateParams,
+} from "./resources/images.ts";
+
+export { IsosApi } from "./resources/isos.ts";
+export type { Iso, IsoType, IsosListParams, IsosListResponse } from "./resources/isos.ts";
+
+export { SshKeysApi } from "./resources/ssh-keys.ts";
+export type {
+  SshKey,
+  SshKeysListParams,
+  SshKeysListResponse,
+  SshKeyCreateParams,
+  SshKeyUpdateParams,
+} from "./resources/ssh-keys.ts";

@@ -140,3 +140,19 @@ export type {
   PrimaryIPUpdateParams,
   PrimaryIPActionResponse,
 } from "./resources/primary-ips.ts";
+
+export { CertificatesApi } from "./resources/certificates.ts";
+export type {
+  Certificate,
+  CertificateType,
+  CertificateStatus,
+  CertificateStatusDetails,
+  CertificatesListParams,
+  CertificatesListResponse,
+  CertificateCreateParams,
+  CertificateCreateUploadedParams,
+  CertificateCreateManagedParams,
+  CertificateCreateResponse,
+  CertificateUpdateParams,
+  CertificateActionResponse,
+} from "./resources/certificates.ts";

@@ -127,3 +127,16 @@ export type {
   FloatingIPUpdateParams,
   FloatingIPActionResponse,
 } from "./resources/floating-ips.ts";
+
+export { PrimaryIPsApi } from "./resources/primary-ips.ts";
+export type {
+  PrimaryIP,
+  PrimaryIPType,
+  PrimaryIPAssigneeType,
+  PrimaryIPsListParams,
+  PrimaryIPsListResponse,
+  PrimaryIPCreateParams,
+  PrimaryIPCreateResponse,
+  PrimaryIPUpdateParams,
+  PrimaryIPActionResponse,
+} from "./resources/primary-ips.ts";

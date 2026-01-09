@@ -1,5 +1,5 @@
 import { HetznerClient, RateLimitError, type QueryParams } from "./client.ts";
-import { delay } from "./utils.ts";
+import { calculateBackoff, delay } from "./utils.ts";
 
 /**
  * Pagination metadata returned by the Hetzner API.
@@ -83,8 +83,7 @@ export async function* paginate<T>(
     } catch (error) {
       if (error instanceof RateLimitError && retryCount < maxRetries) {
         retryCount++;
-        const backoffMs = Math.max(error.retryAfter * 1000, 100 * Math.pow(2, retryCount));
-        await delay(backoffMs);
+        await delay(calculateBackoff(error.retryAfter, retryCount));
         continue;
       }
       throw error;

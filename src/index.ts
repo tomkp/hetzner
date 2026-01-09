@@ -100,3 +100,19 @@ export type {
   NetworkActionResponse,
   SubnetParams,
 } from "./resources/networks.ts";
+
+export { FirewallsApi } from "./resources/firewalls.ts";
+export type {
+  Firewall,
+  FirewallRule,
+  FirewallRuleDirection,
+  FirewallRuleProtocol,
+  FirewallResourceRef,
+  FirewallsListParams,
+  FirewallsListResponse,
+  FirewallCreateParams,
+  FirewallCreateResponse,
+  FirewallUpdateParams,
+  FirewallActionResponse,
+  FirewallActionsResponse,
+} from "./resources/firewalls.ts";

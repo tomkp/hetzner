@@ -1,4 +1,5 @@
 import { HetznerClient, RateLimitError, type QueryParams } from "./client.ts";
+import { delay } from "./utils.ts";
 
 export interface Pagination {
   page: number;
@@ -16,8 +17,6 @@ export interface PaginatedResponse {
 }
 
 export type PaginatedData<T, K extends string> = Record<K, T[]> & PaginatedResponse;
-
-const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function* paginate<T>(
   client: HetznerClient,

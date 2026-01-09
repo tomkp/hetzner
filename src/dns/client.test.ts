@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, mock } from "node:test";
 import assert from "node:assert";
-import { HetznerDnsClient, HetznerDnsError } from "./client.ts";
+import { HetznerDnsClient, HetznerDnsError, DnsRateLimitError } from "./client.ts";
 
 describe("HetznerDnsClient", () => {
   const mockToken = "test-dns-api-token";
@@ -65,6 +65,42 @@ describe("HetznerDnsClient", () => {
       assert.ok(url.includes("name=example.com"));
       assert.ok(url.includes("page=1"));
     });
+
+    it("handles undefined query parameters", async () => {
+      fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ zones: [] }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          })
+        )
+      );
+
+      await client.get("/zones", { name: "example.com", page: undefined });
+
+      const call = fetchMock.mock.calls[0];
+      const url = call?.arguments[0] as string;
+      assert.ok(url.includes("name=example.com"));
+      assert.ok(!url.includes("page="));
+    });
+
+    it("handles array query parameters", async () => {
+      fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ records: [] }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          })
+        )
+      );
+
+      await client.get("/records", { type: ["A", "AAAA"] });
+
+      const call = fetchMock.mock.calls[0];
+      const url = call?.arguments[0] as string;
+      assert.ok(url.includes("type=A"));
+      assert.ok(url.includes("type=AAAA"));
+    });
   });
 
   describe("post", () => {
@@ -118,6 +154,14 @@ describe("HetznerDnsClient", () => {
       const options = call?.arguments[1] as RequestInit;
       assert.strictEqual(options.method, "DELETE");
     });
+
+    it("returns undefined for empty response", async () => {
+      fetchMock.mock.mockImplementation(() => Promise.resolve(new Response("", { status: 200 })));
+
+      const result = await client.delete("/zones/1");
+
+      assert.strictEqual(result, undefined);
+    });
   });
 
   describe("error handling", () => {
@@ -138,17 +182,68 @@ describe("HetznerDnsClient", () => {
         (error) => {
           assert.ok(error instanceof HetznerDnsError);
           assert.strictEqual(error.message, "Zone not found");
+          assert.strictEqual(error.code, 404);
           assert.strictEqual(error.statusCode, 404);
           return true;
         }
       );
     });
 
-    it("handles rate limiting", async () => {
+    it("throws DnsRateLimitError with retryAfter on 429", async () => {
       fetchMock.mock.mockImplementation(() =>
         Promise.resolve(
-          new Response(JSON.stringify({ message: "Rate limit exceeded" }), {
-            status: 429,
+          new Response(
+            JSON.stringify({
+              error: { message: "Rate limit exceeded", code: 429 },
+            }),
+            {
+              status: 429,
+              headers: {
+                "Content-Type": "application/json",
+                "Retry-After": "60",
+              },
+            }
+          )
+        )
+      );
+
+      await assert.rejects(
+        async () => client.get("/zones"),
+        (error) => {
+          assert.ok(error instanceof DnsRateLimitError);
+          assert.strictEqual(error.statusCode, 429);
+          assert.strictEqual(error.retryAfter, 60);
+          return true;
+        }
+      );
+    });
+
+    it("handles error response with message field", async () => {
+      fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ message: "Bad request" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          })
+        )
+      );
+
+      await assert.rejects(
+        async () => client.post("/zones", {}),
+        (error) => {
+          assert.ok(error instanceof HetznerDnsError);
+          assert.strictEqual(error.message, "Bad request");
+          return true;
+        }
+      );
+    });
+
+    it("handles malformed JSON error response", async () => {
+      fetchMock.mock.mockImplementation(() =>
+        Promise.resolve(
+          new Response("Not valid JSON", {
+            status: 500,
+            statusText: "Internal Server Error",
             headers: { "Content-Type": "application/json" },
           })
         )
@@ -158,7 +253,8 @@ describe("HetznerDnsClient", () => {
         async () => client.get("/zones"),
         (error) => {
           assert.ok(error instanceof HetznerDnsError);
-          assert.strictEqual(error.statusCode, 429);
+          assert.strictEqual(error.statusCode, 500);
+          assert.ok(error.message.includes("HTTP 500"));
           return true;
         }
       );

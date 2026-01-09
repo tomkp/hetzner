@@ -16,3 +16,25 @@ export type {
   ActionsListResponse,
   PollOptions,
 } from "./resources/actions.ts";
+
+export { ServerTypesApi } from "./resources/server-types.ts";
+export type {
+  ServerType,
+  ServerTypePrice,
+  ServerTypesListParams,
+  ServerTypesListResponse,
+} from "./resources/server-types.ts";
+
+export { LocationsApi } from "./resources/locations.ts";
+export type {
+  Location,
+  LocationsListParams,
+  LocationsListResponse,
+} from "./resources/locations.ts";
+
+export { DatacentersApi } from "./resources/datacenters.ts";
+export type {
+  Datacenter,
+  DatacentersListParams,
+  DatacentersListResponse,
+} from "./resources/datacenters.ts";

@@ -201,3 +201,19 @@ export type {
   PlacementGroupCreateResponse,
   PlacementGroupUpdateParams,
 } from "./resources/placement-groups.ts";
+
+export { PricingApi } from "./resources/pricing.ts";
+export type {
+  Pricing,
+  PriceAmount,
+  ImagePricing,
+  FloatingIPPricing,
+  FloatingIPTypePricing,
+  PrimaryIPTypePricing,
+  TrafficPricing,
+  ServerBackupPricing,
+  ServerTypePricing,
+  LoadBalancerTypePricing,
+  VolumePricing,
+  VolumeLocationPricing,
+} from "./resources/pricing.ts";

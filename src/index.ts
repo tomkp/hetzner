@@ -116,3 +116,14 @@ export type {
   FirewallActionResponse,
   FirewallActionsResponse,
 } from "./resources/firewalls.ts";
+
+export { FloatingIPsApi } from "./resources/floating-ips.ts";
+export type {
+  FloatingIP,
+  FloatingIPType,
+  FloatingIPsListParams,
+  FloatingIPsListResponse,
+  FloatingIPCreateParams,
+  FloatingIPUpdateParams,
+  FloatingIPActionResponse,
+} from "./resources/floating-ips.ts";

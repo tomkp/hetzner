@@ -6,6 +6,7 @@ import {
   generateTestName,
 } from "./test-helpers.ts";
 import { SshKeysApi } from "../resources/ssh-keys.ts";
+import { HetznerError } from "../client.ts";
 
 const runTests = shouldRunIntegrationTests();
 
@@ -83,9 +84,13 @@ describe("SshKeysApi Integration", { skip: !runTests }, () => {
     await sshKeys.delete(created.id);
     createdKeyIds.pop(); // Remove from cleanup list since we deleted it
 
-    // Verify deleted
-    const afterDelete = await sshKeys.list();
-    const stillExists = afterDelete.ssh_keys.find((k) => k.id === created.id);
-    assert.ok(!stillExists, "Key should be deleted");
+    // Verify deleted - attempting to get should return 404
+    try {
+      await sshKeys.get(created.id);
+      assert.fail("Expected 404 error for deleted key");
+    } catch (error) {
+      assert.ok(error instanceof HetznerError, "Should throw HetznerError");
+      assert.strictEqual(error.statusCode, 404, "Should be 404 Not Found");
+    }
   });
 });

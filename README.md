@@ -1,17 +1,19 @@
 # hetzner
 
+[![npm](https://img.shields.io/npm/v/@tomkp/hetzner)](https://www.npmjs.com/package/@tomkp/hetzner)
+
 A TypeScript client for the [Hetzner Cloud API](https://docs.hetzner.cloud/) and [Hetzner DNS API](https://dns.hetzner.com/api-docs).
 
 ## Installation
 
 ```bash
-npm install hetzner
+npm install @tomkp/hetzner
 ```
 
 ## Quick Start
 
 ```typescript
-import { Hetzner } from "hetzner";
+import { Hetzner } from "@tomkp/hetzner";
 
 const hetzner = new Hetzner("your-api-token");
 
@@ -26,7 +28,7 @@ const server = await hetzner.servers.getByName("my-server");
 ## Configuration
 
 ```typescript
-import { Hetzner } from "hetzner";
+import { Hetzner } from "@tomkp/hetzner";
 
 const hetzner = new Hetzner("your-api-token", {
   baseUrl: "https://api.hetzner.cloud/v1", // optional, this is the default
@@ -41,7 +43,7 @@ console.log(hetzner.client.baseUrl);
 You can also use the individual API classes directly if preferred:
 
 ```typescript
-import { HetznerClient, ServersApi } from "hetzner";
+import { HetznerClient, ServersApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const servers = new ServersApi(client);
@@ -52,7 +54,7 @@ const servers = new ServersApi(client);
 ### Servers
 
 ```typescript
-import { HetznerClient, ServersApi, ActionsApi } from "hetzner";
+import { HetznerClient, ServersApi, ActionsApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const servers = new ServersApi(client);
@@ -81,7 +83,7 @@ await servers.delete(server.id);
 ### SSH Keys
 
 ```typescript
-import { HetznerClient, SshKeysApi } from "hetzner";
+import { HetznerClient, SshKeysApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const sshKeys = new SshKeysApi(client);
@@ -102,7 +104,7 @@ const myKey = await sshKeys.getByName("my-key");
 ### Volumes
 
 ```typescript
-import { HetznerClient, VolumesApi, ActionsApi } from "hetzner";
+import { HetznerClient, VolumesApi, ActionsApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const volumes = new VolumesApi(client);
@@ -130,7 +132,7 @@ await actions.poll(resizeAction.id);
 ### Networks
 
 ```typescript
-import { HetznerClient, NetworksApi } from "hetzner";
+import { HetznerClient, NetworksApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const networks = new NetworksApi(client);
@@ -152,7 +154,7 @@ const network = await networks.create({
 ### Firewalls
 
 ```typescript
-import { HetznerClient, FirewallsApi } from "hetzner";
+import { HetznerClient, FirewallsApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const firewalls = new FirewallsApi(client);
@@ -180,7 +182,7 @@ const { firewall } = await firewalls.create({
 ### Load Balancers
 
 ```typescript
-import { HetznerClient, LoadBalancersApi } from "hetzner";
+import { HetznerClient, LoadBalancersApi } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const loadBalancers = new LoadBalancersApi(client);
@@ -221,7 +223,7 @@ await loadBalancers.addService(load_balancer.id, {
 ### Pagination
 
 ```typescript
-import { HetznerClient, ServersApi, paginate, fetchAllPages } from "hetzner";
+import { HetznerClient, ServersApi, paginate, fetchAllPages } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 
@@ -237,7 +239,7 @@ const allServers = await fetchAllPages(client, "/servers", "servers");
 ## Error Handling
 
 ```typescript
-import { HetznerClient, ServersApi, HetznerError, RateLimitError } from "hetzner";
+import { HetznerClient, ServersApi, HetznerError, RateLimitError } from "@tomkp/hetzner";
 
 const client = new HetznerClient("your-api-token");
 const servers = new ServersApi(client);
@@ -261,7 +263,7 @@ The library also provides a client for the Hetzner DNS API. Note that the DNS AP
 ### DNS Quick Start
 
 ```typescript
-import { HetznerDns } from "hetzner";
+import { HetznerDns } from "@tomkp/hetzner";
 
 const dns = new HetznerDns("your-dns-api-token");
 
@@ -276,7 +278,7 @@ const zone = await dns.zones.getByName("example.com");
 ### DNS Zones
 
 ```typescript
-import { HetznerDns } from "hetzner";
+import { HetznerDns } from "@tomkp/hetzner";
 
 const dns = new HetznerDns("your-dns-api-token");
 
@@ -298,7 +300,7 @@ await dns.zones.delete(zone.id);
 ### DNS Records
 
 ```typescript
-import { HetznerDns } from "hetzner";
+import { HetznerDns } from "@tomkp/hetzner";
 
 const dns = new HetznerDns("your-dns-api-token");
 
@@ -339,7 +341,7 @@ await dns.records.delete(record.id);
 ### DNS Error Handling
 
 ```typescript
-import { HetznerDns, HetznerDnsError, DnsRateLimitError } from "hetzner";
+import { HetznerDns, HetznerDnsError, DnsRateLimitError } from "@tomkp/hetzner";
 
 const dns = new HetznerDns("your-dns-api-token");
 

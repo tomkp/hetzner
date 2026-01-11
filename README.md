@@ -220,6 +220,98 @@ await loadBalancers.addService(load_balancer.id, {
 });
 ```
 
+### Deploying an App
+
+This example shows how to deploy a web application with server provisioning, firewall, DNS, and TLS certificates.
+
+```typescript
+import { Hetzner, HetznerDns } from "@tomkp/hetzner";
+
+const cloud = new Hetzner(process.env.HETZNER_API_TOKEN!);
+const dns = new HetznerDns(process.env.HETZNER_DNS_API_TOKEN!);
+
+const APP_NAME = "myapp";
+const DOMAIN = "myapp.example.com";
+
+// 1. Create or get SSH key
+let sshKey = await cloud.sshKeys.getByName(`${APP_NAME}-key`);
+if (!sshKey) {
+  sshKey = await cloud.sshKeys.create({
+    name: `${APP_NAME}-key`,
+    public_key: process.env.SSH_PUBLIC_KEY!,
+  });
+}
+
+// 2. Create firewall for web traffic
+const { firewall, actions: fwActions } = await cloud.firewalls.create({
+  name: `${APP_NAME}-firewall`,
+  rules: [
+    { direction: "in", protocol: "tcp", port: "22", source_ips: ["0.0.0.0/0", "::/0"] },
+    { direction: "in", protocol: "tcp", port: "80", source_ips: ["0.0.0.0/0", "::/0"] },
+    { direction: "in", protocol: "tcp", port: "443", source_ips: ["0.0.0.0/0", "::/0"] },
+  ],
+});
+for (const action of fwActions ?? []) {
+  await cloud.actions.poll(action.id);
+}
+
+// 3. Create server with SSH key and firewall
+const { server, action: serverAction } = await cloud.servers.create({
+  name: `${APP_NAME}-server`,
+  server_type: "cx22",
+  image: "ubuntu-24.04",
+  location: "fsn1",
+  ssh_keys: [sshKey.name],
+  firewalls: [{ firewall: firewall.id }],
+  labels: { app: APP_NAME },
+});
+await cloud.actions.poll(serverAction.id);
+
+const serverIp = server.public_net.ipv4?.ip;
+console.log(`Server ready at ${serverIp}`);
+
+// 4. Set up DNS - create zone if needed, then add A record
+let zone = await dns.zones.getByName("example.com");
+if (!zone) {
+  zone = await dns.zones.create({ name: "example.com", ttl: 3600 });
+}
+
+await dns.records.create({
+  zone_id: zone.id,
+  type: "A",
+  name: "myapp", // creates myapp.example.com
+  value: serverIp!,
+  ttl: 300,
+});
+
+// 5. Create managed TLS certificate (auto-renewing Let's Encrypt)
+const { certificate, action: certAction } = await cloud.certificates.create({
+  name: `${APP_NAME}-cert`,
+  type: "managed",
+  domain_names: [DOMAIN],
+});
+if (certAction) {
+  await cloud.actions.poll(certAction.id);
+}
+
+console.log(`Deployment complete!`);
+console.log(`Server: ${serverIp}`);
+console.log(`Domain: ${DOMAIN}`);
+console.log(`Certificate: ${certificate.domain_names.join(", ")}`);
+```
+
+#### Cleanup
+
+```typescript
+// Delete in reverse order of dependencies
+await cloud.certificates.delete(certificate.id);
+await dns.records.delete(record.id);
+const deleteAction = await cloud.servers.delete(server.id);
+await cloud.actions.poll(deleteAction.id);
+await cloud.firewalls.delete(firewall.id);
+await cloud.sshKeys.delete(sshKey.id);
+```
+
 ### Pagination
 
 ```typescript

@@ -393,6 +393,39 @@ try {
 
 - Node.js >= 22.6.0
 
+## Development
+
+### Running Tests
+
+```bash
+# Run all tests (unit + integration)
+npm test
+
+# Run only unit tests
+npm run test:unit
+
+# Run only integration tests
+npm run test:integration
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Integration Tests
+
+Integration tests run against the real Hetzner Cloud API. They require a valid API token:
+
+```bash
+export HETZNER_API_TOKEN=your-api-token
+npm run test:integration
+```
+
+The integration tests include:
+- **Read-only tests**: Locations, datacenters, server types, pricing (no resources created)
+- **Lifecycle tests**: SSH keys (create, update, delete - free operations)
+
+Tests automatically skip when no API token is provided.
+
 ## License
 
 MIT

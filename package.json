@@ -1,6 +1,6 @@
 {
   "name": "@tomkp/hetzner",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TypeScript client for the Hetzner Cloud API",
   "type": "module",
   "main": "dist/index.js",
@@ -34,6 +34,14 @@
   ],
   "author": "tomkp",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomkp/hetzner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tomkp/hetzner/issues"
+  },
+  "homepage": "https://github.com/tomkp/hetzner#readme",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@types/node": "^22.10.0",
